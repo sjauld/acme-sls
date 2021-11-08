@@ -1,0 +1,15 @@
+@startuml certificate-creation
+    skinparam backgroundColor #EEEBDC
+    skinparam handwritten true
+    Client -> ACME : create user
+    ACME -> Client : ok
+    Client -> ACME : new cert request
+    ACME -> Client : challenge details
+    Client -> Store : save challenge
+    Client -> ACME : proceed
+    ACME -> Server : request challenge
+    Server -> Store : request challenge
+    Store -> Server : challenge
+    Server -> ACME : challenge
+    ACME -> Client : issue certificate
+@enduml
