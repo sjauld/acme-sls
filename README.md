@@ -10,7 +10,7 @@ certificate request from the end server. Designed for use in AWS serverless
 
 ## Certificate creation workflow
 
-![Certificate creation](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://github.com/sjauld/acme-sls/blob/main/certificate-creation.iuml)
+![Certificate creation](https://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/sjauld/acme-sls/main/certificate-creation.iuml)
 
 
 ## Testing locally
