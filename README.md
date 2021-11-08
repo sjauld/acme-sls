@@ -1,5 +1,8 @@
 # ACME SLS
 
+[![Go Reference](https://pkg.go.dev/badge/github.com/sjauld/acme-sls/.svg)](https://pkg.go.dev/github.com/sjauld/acme-sls/)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sjauld_acme-sls&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=sjauld_acme-sls)
+
 An implementation of the ACMEv2 HTTP-01 challenge solver that decouples the
 certificate request from the end server. Designed for use in AWS serverless
 (or similar) environments.
