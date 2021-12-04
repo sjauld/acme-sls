@@ -1,10 +1,10 @@
-// package solver solves the ACMEv2 HTTP-01 challenge. The workflow is as follows:
+// package http solves the ACMEv2 HTTP-01 challenge. The workflow is as follows:
 //
 // 1. client requests a certificate from the remote CA, using the Solver as the HTTP-01 challenge
 // 2. Solver populates the Challenge in the Store and notifies the CA that the challenge is ready
 // 3. remote CA requests the keyauth from the well known path on the server
 // 4. server retrieves the Challenge from the Store, validates the requests and presents the keyauth to the remote CA
-package solver
+package http
 
 import (
 	"log"

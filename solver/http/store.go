@@ -1,4 +1,4 @@
-package solver
+package http
 
 import (
 	"errors"

@@ -6,7 +6,7 @@ import (
 	"crypto/elliptic"
 	"crypto/rand"
 
-	"github.com/go-acme/lego/registration"
+	"github.com/go-acme/lego/v4/registration"
 )
 
 // User represents a user of the CA server

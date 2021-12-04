@@ -9,10 +9,10 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
-	"github.com/go-acme/lego/certcrypto"
-	"github.com/go-acme/lego/certificate"
-	"github.com/go-acme/lego/lego"
-	"github.com/go-acme/lego/registration"
+	"github.com/go-acme/lego/v4/certcrypto"
+	"github.com/go-acme/lego/v4/certificate"
+	"github.com/go-acme/lego/v4/lego"
+	"github.com/go-acme/lego/v4/registration"
 
 	"github.com/sjauld/acme-sls/helpers"
 	"github.com/sjauld/acme-sls/solver"
@@ -103,7 +103,7 @@ func main() {
 	client.Challenge.SetHTTP01Provider(solver)
 
 	request := certificate.ObtainRequest{
-		Domains: []string{"gin"},
+		Domains: []string{"www.gin.com", "www.tonic.com"},
 		Bundle:  true,
 	}
 
