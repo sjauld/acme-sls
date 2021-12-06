@@ -13,13 +13,13 @@ AWS serverless (or similar) environments.
 
 Two working implementations are available in this repo:
 
-* [HTTP-01 (AWS Lambda / S3)](HTTP-01 (AWS Lambda / S3))
-* [HTTP-01 (Local demonstration)](HTTP-01 (Local demonstration))
+* [HTTP-01 (AWS Lambda / S3)](#http-01-aws-lambda--s3)
+* [HTTP-01 (Local demonstration)](#http-01-local-demonstration)
 
 Two incomplete/doomed implmentations are also provided:
 
-* [HTTP-01 (AWS Lambda / API Gateway)](HTTP-01 (AWS Lambda / API Gateway))
-* [TLS-ALPN-01 (AWS Lambda / ACM)](TLS-ALPN-01 (AWS Lambda / ACM))
+* [HTTP-01 (AWS Lambda / API Gateway)](#http-01-aws-lambda--api-gateway)
+* [TLS-ALPN-01 (AWS Lambda / ACM)](#tls-alpn-01-aws-lambda--acm)
 
 ### HTTP-01 (AWS Lambda / S3)
 
