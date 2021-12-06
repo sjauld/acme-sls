@@ -3,6 +3,7 @@ package http
 import (
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -42,7 +43,7 @@ func NewGinHandlerFunc(store Store) func(*gin.Context) {
 // We just need to check that the hostname we stored for the token is the same as the
 // hostname in the HTTP request
 func validateChallenge(req *http.Request, ch *Challenge) bool {
-	reqHost := req.URL.Hostname()
+	reqHost := strings.Split(req.Host, ":")[0]
 	expectedHost := ch.Domain
 	log.Printf("[DEBUG] request host: %v, expected host: %v", reqHost, expectedHost)
 	return reqHost == expectedHost

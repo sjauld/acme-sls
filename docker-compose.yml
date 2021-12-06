@@ -12,6 +12,8 @@ services:
     ports:
       - "5001:5001"
       - "5002:5002"
+    depends_on:
+      - pebble
     networks:
       default:
         aliases:
