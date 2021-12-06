@@ -129,10 +129,6 @@ func handler(ctx context.Context, event events.CloudWatchEvent) {
 	}
 	log.Printf("[INFO] Obtained certificate: %v", cert.CertURL)
 
-	log.Printf("[DEBUG] Cert: %v", string(cert.Certificate))
-	log.Printf("[DEBUG] Chain: %v", string(cert.IssuerCertificate))
-	log.Printf("[DEBUG] Key: %v", string(cert.PrivateKey))
-
 	// And we'll persist the certificate to Amazon Certificate Manager
 	req := &acm.ImportCertificateInput{
 		Certificate:      cert.Certificate,
@@ -149,7 +145,6 @@ func handler(ctx context.Context, event events.CloudWatchEvent) {
 		log.Printf("[INFO] Renewing ACM certificate %v", certARN)
 		req.CertificateArn = aws.String(certARN)
 	}
-	log.Printf("[DEBUG] req: %v", req)
 	resp, err := acmClient.ImportCertificate(req)
 	if err != nil {
 		log.Fatal(err)

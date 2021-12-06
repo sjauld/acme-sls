@@ -15,8 +15,10 @@ import (
 	"github.com/go-acme/lego/v4/registration"
 
 	"github.com/sjauld/acme-sls/helpers"
-	"github.com/sjauld/acme-sls/solver"
+	solver "github.com/sjauld/acme-sls/solver/http"
 )
+
+var domains = []string{"www.gin.com", "www.tonic.com"}
 
 // Before testing, spin up the test environment with docker-compose up
 func localPebbleClient(user *helpers.User) *lego.Client {
@@ -103,7 +105,7 @@ func main() {
 	client.Challenge.SetHTTP01Provider(solver)
 
 	request := certificate.ObtainRequest{
-		Domains: []string{"www.gin.com", "www.tonic.com"},
+		Domains: domains,
 		Bundle:  true,
 	}
 

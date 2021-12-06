@@ -14,13 +14,17 @@ resource "aws_lambda_function" "challenge" {
   function_name = "AcmeSLSCertificateCreator"
   description   = "See https://github.com/sjauld/acme-sls/ for details"
 
-  # @TODO add s3 shit
-  filename = "../../bin/lambda-http-s3.zip"
+  # If a zipfile is not provided, then we assume that we're deploying in N. Virginia.
+  # This could probably be improved
+  s3_bucket = var.lambda_zipfile == null ? "viostream-mgmt-build-artifacts-us-east-1" : null
+  s3_key    = var.lambda_zipfile == null ? "acme-sls/lambda-http-s3.latest.zip" : null
+
+  filename =  var.lambda_zipfile
 
   role = aws_iam_role.lambda.arn
 
   runtime = "go1.x"
-  handler = "lambda-http-s3"
+  handler = var.lambda_handler
 
   environment {
     variables = {
@@ -107,11 +111,47 @@ data "aws_iam_policy_document" "lambda" {
   }
 }
 
+locals {
+  # Set up the schedule so it commences after some specified delay (to give DNS a good chance to propogate)
+  first_run = timeadd(timestamp(), var.first_run_delay)
+}
+
+# Cloudwatch events - we just want to trigger the lambda once per day for each
+# certificate so that it can check if a renewal is required
+resource "aws_cloudwatch_event_rule" "challenge" {
+  name        = "ACME-SLS-schedule"
+  description = "See https://github.com/sjauld/acme-sls/ for details"
+
+  schedule_expression = "cron(${formatdate("mm", local.first_run)} ${formatdate("hh", local.first_run)} * * ? *)"
+
+  lifecycle {
+    # This will get updated every time terraform runs so we should ignore it
+    ignore_changes = [schedule_expression]
+  }
+}
+
+resource "aws_cloudwatch_event_target" "challenge" {
+  for_each = var.certificates
+
+  arn   = aws_lambda_function.challenge.arn
+  rule  = aws_cloudwatch_event_rule.challenge.id
+  input = jsonencode({ "detail" = { "id" = each.key, "domains" = each.value } })
+}
+
+resource "aws_lambda_permission" "challenge" {
+  statement_id  = "CloudWatchExecution"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.challenge.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.challenge.arn
+}
+
 resource "aws_s3_bucket" "challenge" {
   count = length(local.domains)
 
   bucket = local.domains[count.index]
 
+  # In case any challenges failed to clean up properly, this allows us to nuke the bucket
   force_destroy = true
 
   tags = local.tags

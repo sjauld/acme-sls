@@ -1,5 +1,6 @@
 variable "tags" {
-  type = map(string)
+  type    = map(string)
+  default = {}
 }
 
 variable "certificates" {
@@ -7,9 +8,20 @@ variable "certificates" {
   type        = map(list(string))
 }
 
-variable "dynamodb_table_name" {
-  description = "The name of the DynamoDB table used to persist challenge information"
-  default     = "acme-sls-certificates"
+variable "first_run_delay" {
+  description = "The delay between creating the terraform plan and firing the first lambda - increase this if you need more time to get DNS records in place"
+  default     = "5m"
+  type        = string
+}
+
+variable "lambda_handler" {
+  description = "This should match the filename of the binary contained in your zip file (if you provide one)"
+  default     = "lambda-http-s3"
+}
+
+variable "lambda_zipfile" {
+  description = "Use this to feed in a zip of your own binary, otherwise we will use the public release"
+  default     = null
   type        = string
 }
 
@@ -20,7 +32,7 @@ variable "renewal_window_days" {
 }
 
 variable "user_email" {
-  description = "An email address to use for registering certificates with Let's Encrypt"
+  description = "An email address to use for registering certificates with Let's Encrypt - provide this if you want to get reminder emails when everything breaks"
   default     = "dev@null.com"
   type        = string
 }

@@ -4,11 +4,11 @@ WORKDIR /go/src/app
 
 COPY . .
 
-RUN CGO_ENABLED=0 go install -ldflags '-extldflags "-static"' -tags timetzdata ./local/
+RUN CGO_ENABLED=0 go install -ldflags '-extldflags "-static"' -tags timetzdata ./client/local-http
 
 FROM scratch
 
-COPY --from=build /go/bin/local /local
+COPY --from=build /go/bin/local-http /local
 COPY --from=alpine:latest /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs
 
 ENTRYPOINT ["/local"]

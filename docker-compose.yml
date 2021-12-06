@@ -8,7 +8,7 @@ services:
   gin:
     build:
       context: .
-      dockerfile: Dockerfile.server
+      dockerfile: Dockerfile.local
     ports:
       - "5001:5001"
       - "5002:5002"

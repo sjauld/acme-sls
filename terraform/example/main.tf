@@ -1,8 +1,13 @@
+provider "aws" {
+  region = "us-east-1"
+}
+
 module "acme_sls" {
   source = "../"
 
   certificates = {
-    "acme-sls.viostream.xyz" = ["acme-sls.viostream.xyz", "subdomain2.acme-sls.viostream.xyz"]
+    "example1.viostream.xyz" = ["example1.viostream.xyz", "blog.example1.viostream.xyz"],
+    "example2.viostream.xyz" = ["example2.viostream.xyz", "blog.example2.viostream.xyz"],
   }
 
   tags = {
@@ -19,12 +24,12 @@ data "aws_route53_zone" "viostream_xyz" {
 # from the same R53 zone - for more complicated setups you'll have to do
 # something more complicated
 resource "aws_route53_record" "acme_sls_viostream_xyz" {
-  count = length(module.acme_sls.buckets)
+  count = length(module.acme_sls.cname_records)
 
   zone_id = data.aws_route53_zone.viostream_xyz.id
 
-  name    = module.acme_sls.buckets[count.index].bucket
+  name    = module.acme_sls.cname_records[count.index].name
   type    = "CNAME"
   ttl     = 300
-  records = [module.acme_sls.buckets[count.index].bucket_domain_name]
+  records = [module.acme_sls.cname_records[count.index].record]
 }

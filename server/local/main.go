@@ -11,7 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
 	"github.com/gin-gonic/gin"
 
-	"github.com/sjauld/acme-sls/solver"
+	solver "github.com/sjauld/acme-sls/solver/http"
 )
 
 func testDynamoDBClient() dynamodbiface.DynamoDBAPI {

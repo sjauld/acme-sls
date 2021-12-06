@@ -67,7 +67,7 @@ type certificateRequest struct {
 }
 
 func handler(ctx context.Context, event events.CloudWatchEvent) {
-	log.Printf("[INFO] Processing certificate request: %v", string(event.Detail))
+	log.Printf("[INFO] Processing event: %v", string(event.Detail))
 	// Unmarshal the request
 	var cr certificateRequest
 	err := json.Unmarshal(event.Detail, &cr)
@@ -149,7 +149,7 @@ func handler(ctx context.Context, event events.CloudWatchEvent) {
 		log.Fatal(err)
 	}
 
-	log.Printf("[INFO] ACM created/renewed: %v", resp.CertificateArn)
+	log.Printf("[INFO] ACM created/renewed: %v", aws.StringValue(resp.CertificateArn))
 }
 
 func main() {
