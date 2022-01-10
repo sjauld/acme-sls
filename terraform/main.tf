@@ -146,7 +146,7 @@ resource "aws_lambda_permission" "challenge" {
 }
 
 resource "aws_s3_bucket" "challenge" {
-  count = length(local.domains) * var.create_buckets ? 1 : 0
+  count = length(local.domains) * (var.create_buckets ? 1 : 0)
 
   bucket = local.domains[count.index]
 
