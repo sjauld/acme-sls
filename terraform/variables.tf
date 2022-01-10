@@ -3,6 +3,11 @@ variable "tags" {
   default = {}
 }
 
+variable "aws_s3_region" {
+  description = "Specify the region your buckets are in if it is different to the main region for this module"
+  type        = string
+}
+
 variable "certificates" {
   description = "A list of the certificates to be created/managed by ACME SLS"
   type        = map(list(string))
