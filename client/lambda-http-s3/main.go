@@ -26,6 +26,7 @@ const (
 	fallbackDynamoDBTable = "acme-sls-certificates"
 	fallbackEmail         = "dev@null.com"
 	fallbackRenewalWindow = "7d"
+	fallbackS3Region      = "us-east-1"
 )
 
 var (
@@ -54,10 +55,18 @@ func init() {
 	}
 	renewalWindow, _ = time.ParseDuration(rwstr)
 
+	s3Region, ok := os.LookupEnv("S3_REGION")
+	if !ok {
+		s3Region = fallbackS3Region
+	}
+
 	// Instantiate AWS clients
 	sess := session.Must(session.NewSession())
 	acmClient = acm.New(sess)
-	s3Client = s3.New(sess)
+	s3Sess := session.Must(session.NewSession(&aws.Config{
+		Region: aws.String(s3Region),
+	}))
+	s3Client = s3.New(s3Sess)
 }
 
 // certificateRequest contains the data we'll send via the CloudWatch event trigger

@@ -4,6 +4,8 @@
 * Creates all the resources you need to start creating and renewing Let's Encrypt certificates.
 */
 
+data "aws_region" "current" {}
+
 locals {
   domains = distinct(flatten([for k, v in var.certificates : v]))
 }
@@ -28,6 +30,7 @@ resource "aws_lambda_function" "challenge" {
   environment {
     variables = {
       "RENEWAL_WINDOW" = "${var.renewal_window_days}d"
+      "S3_REGION"      = coalesce(var.aws_s3_region, data.aws_region.current.name)
       "USER_EMAIL"     = var.user_email
     }
   }
