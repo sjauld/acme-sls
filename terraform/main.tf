@@ -1,8 +1,7 @@
 /*
 * # ACME-sls Terraform Module
 *
-* Creates all the resources you need to start creating and renewing Let's
-* Encrypt certificates.
+* Creates all the resources you need to start creating and renewing Let's Encrypt certificates.
 */
 
 locals {
@@ -19,7 +18,7 @@ resource "aws_lambda_function" "challenge" {
   s3_bucket = var.lambda_zipfile == null ? "viostream-mgmt-build-artifacts-us-east-1" : null
   s3_key    = var.lambda_zipfile == null ? "acme-sls/lambda-http-s3.latest.zip" : null
 
-  filename =  var.lambda_zipfile
+  filename = var.lambda_zipfile
 
   role = aws_iam_role.lambda.arn
 
@@ -147,7 +146,7 @@ resource "aws_lambda_permission" "challenge" {
 }
 
 resource "aws_s3_bucket" "challenge" {
-  count = length(local.domains)
+  count = length(local.domains) * var.create_buckets ? 1 : 0
 
   bucket = local.domains[count.index]
 

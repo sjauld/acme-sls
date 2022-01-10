@@ -8,6 +8,12 @@ variable "certificates" {
   type        = map(list(string))
 }
 
+variable "create_buckets" {
+  description = "Set this to false to BYO buckets"
+  default     = true
+  type        = bool
+}
+
 variable "first_run_delay" {
   description = "The delay between creating the terraform plan and firing the first lambda - increase this if you need more time to get DNS records in place"
   default     = "5m"
