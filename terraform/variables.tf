@@ -6,6 +6,7 @@ variable "tags" {
 variable "aws_s3_region" {
   description = "Specify the region your buckets are in if it is different to the main region for this module"
   type        = string
+  default     = ""
 }
 
 variable "certificates" {
