@@ -55,7 +55,7 @@ variable "replication_role_arn" {
   type        = string
 }
 
-variable "s3_delay" {
+variable "s3_delay_seconds" {
   description = "Add a delay here if you are relying on S3 replication"
   default     = 0
   type        = number
