@@ -30,9 +30,10 @@ const (
 )
 
 var (
-	dynamoDBTable string
-	renewalWindow time.Duration
-	userEmail     string
+	s3CreationDelay time.Duration
+	dynamoDBTable   string
+	renewalWindow   time.Duration
+	userEmail       string
 
 	// AWS clients are instantiated during cold start
 	acmClient *acm.ACM
@@ -54,6 +55,13 @@ func init() {
 		rwstr = fallbackRenewalWindow
 	}
 	renewalWindow, _ = time.ParseDuration(rwstr)
+
+	s3Delaystr := os.Getenv("S3_DELAY")
+	// Make sure the env variable is a valid duration
+	if _, err := time.ParseDuration(s3Delaystr); err != nil {
+		s3Delaystr = "0"
+	}
+	s3CreationDelay, _ = time.ParseDuration(s3Delaystr)
 
 	s3Region, ok := os.LookupEnv("S3_REGION")
 	if !ok {
@@ -116,7 +124,7 @@ func handler(ctx context.Context, event events.CloudWatchEvent) {
 	user.SetRegistration(reg)
 
 	// Set up the solver
-	solver := solver.New(s3Client)
+	solver := solver.New(s3Client).WithDelay(s3CreationDelay)
 
 	client.Challenge.SetHTTP01Provider(solver)
 
