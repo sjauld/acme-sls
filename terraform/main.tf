@@ -157,6 +157,27 @@ resource "aws_s3_bucket" "challenge" {
     enabled = true
   }
 
+  # Support to replicate everything back to a master bucket, in case you are
+  # doing some multi-domain cloudfront magic.acceleration_status
+  dynamic "replication_configuration" {
+    # Don't try to replicate to yourself
+    for_each = var.replication_target_bucket_arn == "" ? [] : var.replication_target_bucket_arn == "arn:aws:s3:::${local.domains[count.index]}" ? [] : [1]
+
+    content {
+      role = var.replication_role_arn
+      rules {
+        id     = "acme"
+        prefix = ".well-known"
+        status = "Enabled"
+
+        destination {
+          bucket        = var.replication_target_bucket_arn
+          storage_class = "STANDARD"
+        }
+      }
+    }
+  }
+
   # In case any challenges failed to clean up properly, this allows us to nuke the bucket
   force_destroy = true
 

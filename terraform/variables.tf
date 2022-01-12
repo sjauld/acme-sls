@@ -43,6 +43,18 @@ variable "renewal_window_days" {
   type        = string
 }
 
+variable "replication_target_bucket_arn" {
+  description = "Specify a master bucket that you'd like all challenges replicated to"
+  default     = ""
+  type        = string
+}
+
+variable "replication_role_arn" {
+  description = "An appropriate role if you need to replicate challenges"
+  default     = ""
+  type        = string
+}
+
 variable "user_email" {
   description = "An email address to use for registering certificates with Let's Encrypt - provide this if you want to get reminder emails when everything breaks"
   default     = "dev@null.com"

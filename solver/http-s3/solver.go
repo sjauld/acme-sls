@@ -13,6 +13,7 @@ import (
 	"fmt"
 	"log"
 	"strings"
+	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/s3"
@@ -22,14 +23,22 @@ import (
 // Solver implements lego's challenge.Provider
 type Solver struct {
 	s3Client s3iface.S3API
+	delay    time.Duration
 }
 
-// New returns a pointer to a Solver, initialised with an ACM client and a target
-// certificateARN to update
+// New returns a pointer to a Solver, initialised with an s3 client
 func New(client s3iface.S3API) *Solver {
 	return &Solver{
 		s3Client: client,
 	}
+}
+
+// WithDelay allows you to introduce a delay between uploading to S3 and
+// continuing with the validation process. This is helpful if you are doing
+// something with S3 replication, for example
+func (s *Solver) WithDelay(t time.Duration) *Solver {
+	s.delay = t
+	return s
 }
 
 // Present writes the challenge information into S3 so that we
@@ -37,7 +46,6 @@ func New(client s3iface.S3API) *Solver {
 func (s *Solver) Present(domain, token, keyAuth string) error {
 	log.Printf("[INFO] Presenting domain: %v, token: %v, keyauth: %v", domain, token, keyAuth)
 
-	// We'll just need to respond from http://<domain>/.well-known/acme-challenge/<token>
 	in := &s3.PutObjectInput{
 		Bucket: aws.String(domain),
 		ACL:    aws.String(s3.ObjectCannedACLPublicRead),
@@ -46,7 +54,12 @@ func (s *Solver) Present(domain, token, keyAuth string) error {
 	}
 
 	_, err := s.s3Client.PutObject(in)
-	return err
+	if err != nil {
+		return err
+	}
+
+	time.Sleep(s.delay)
+	return nil
 }
 
 // CleanUp removes the challenge information from S3
@@ -62,6 +75,7 @@ func (s *Solver) CleanUp(domain, token, keyAuth string) error {
 	return err
 }
 
+// The request from ACME will be to http://<domain>/.well-known/acme-challenge/<token>
 func keyFromToken(t string) *string {
 	k := fmt.Sprintf(".well-known/acme-challenge/%s", t)
 	return &k
