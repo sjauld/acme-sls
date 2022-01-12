@@ -153,6 +153,10 @@ resource "aws_s3_bucket" "challenge" {
 
   bucket = local.domains[count.index]
 
+  versioning {
+    enabled = true
+  }
+
   # In case any challenges failed to clean up properly, this allows us to nuke the bucket
   force_destroy = true
 
