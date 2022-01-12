@@ -40,7 +40,7 @@ variable "lambda_zipfile" {
 variable "renewal_window_days" {
   description = "The minimum number of days validity left on a certificate before it is renewed"
   default     = 7
-  type        = string
+  type        = number
 }
 
 variable "replication_target_bucket_arn" {
@@ -53,6 +53,12 @@ variable "replication_role_arn" {
   description = "An appropriate role if you need to replicate challenges"
   default     = ""
   type        = string
+}
+
+variable "s3_delay" {
+  description = "Add a delay here if you are relying on S3 replication"
+  default     = 0
+  type        = number
 }
 
 variable "user_email" {
