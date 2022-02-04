@@ -12,7 +12,7 @@ locals {
 
 # This function solves the HTTP-01 challenge
 resource "aws_lambda_function" "challenge" {
-  function_name = "AcmeSLSCertificateCreator"
+  function_name = "${var.namespace}AcmeSLSCertificateCreator"
   description   = "See https://github.com/sjauld/acme-sls/ for details"
 
   # If a zipfile is not provided, then we assume that we're deploying in N. Virginia.
@@ -46,7 +46,7 @@ resource "aws_lambda_function" "challenge" {
 
 # Client lambda permissions
 resource "aws_iam_role" "lambda" {
-  name               = "AcmeSLSCertificateCreator"
+  name               = "${var.namespace}AcmeSLSCertificateCreator"
   assume_role_policy = data.aws_iam_policy_document.lambda_assume.json
 
   tags = local.tags
@@ -70,7 +70,7 @@ resource "aws_iam_policy_attachment" "lambda" {
 }
 
 resource "aws_iam_policy" "lambda" {
-  name   = "AcmeSLSCertificateCreator"
+  name   = "${var.namespace}AcmeSLSCertificateCreator"
   policy = data.aws_iam_policy_document.lambda.json
 }
 
@@ -122,7 +122,7 @@ locals {
 # Cloudwatch events - we just want to trigger the lambda once per day for each
 # certificate so that it can check if a renewal is required
 resource "aws_cloudwatch_event_rule" "challenge" {
-  name        = "ACME-SLS-schedule"
+  name        = "${var.namespace}ACME-SLS-schedule"
   description = "See https://github.com/sjauld/acme-sls/ for details"
 
   schedule_expression = "cron(${formatdate("mm", local.first_run)} ${formatdate("hh", local.first_run)} * * ? *)"

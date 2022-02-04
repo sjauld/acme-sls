@@ -37,6 +37,12 @@ variable "lambda_zipfile" {
   type        = string
 }
 
+variable "namespace" {
+  description = "Use this if you have multiple ACME-SLS modules to avoid name clashes"
+  default     = ""
+  type        = string
+}
+
 variable "renewal_window_days" {
   description = "The minimum number of days validity left on a certificate before it is renewed"
   default     = 7
