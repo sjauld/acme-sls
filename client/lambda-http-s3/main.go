@@ -25,7 +25,7 @@ const (
 	acmeSLSTagName        = "ACME-SLS-Certificate-ID"
 	fallbackDynamoDBTable = "acme-sls-certificates"
 	fallbackEmail         = "dev@null.com"
-	fallbackRenewalWindow = "7d"
+	fallbackRenewalWindow = "168h"
 	fallbackS3Region      = "us-east-1"
 )
 
