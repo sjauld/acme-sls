@@ -43,9 +43,9 @@ variable "namespace" {
   type        = string
 }
 
-variable "renewal_window_days" {
-  description = "The minimum number of days validity left on a certificate before it is renewed"
-  default     = 7
+variable "renewal_window_hours" {
+  description = "The minimum number of hours validity left on a certificate before it is renewed"
+  default     = 168
   type        = number
 }
 
