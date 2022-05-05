@@ -149,16 +149,18 @@ func handler(ctx context.Context, event events.CloudWatchEvent) {
 		Certificate:      myCert,
 		CertificateChain: cert.IssuerCertificate,
 		PrivateKey:       cert.PrivateKey,
-		Tags: []*acm.Tag{
-			{
-				Key:   aws.String(acmeSLSTagName),
-				Value: aws.String(cr.ID),
-			},
-		},
 	}
 	if certARN != "" {
 		log.Printf("[INFO] Renewing ACM certificate %v", certARN)
 		req.CertificateArn = aws.String(certARN)
+	} else {
+		log.Printf("[INFO] Creating new ACM certificate")
+		req.Tags = []*acm.Tag{
+			{
+				Key:   aws.String(acmeSLSTagName),
+				Value: aws.String(cr.ID),
+			},
+		}
 	}
 
 	resp, err := acmClient.ImportCertificate(req)
