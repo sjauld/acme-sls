@@ -8,6 +8,8 @@ data "aws_region" "current" {}
 
 locals {
   domains = distinct(flatten([for k, v in var.certificates : v]))
+  # List of buckets to replicate, bearing in mind that we shouldn't self-replicate
+  bucket_replications = var.replication_target_bucket_arn == "" ? [] : tolist(setsubtract(local.domains, [split(":", var.replication_target_bucket_arn)[5]]))
 }
 
 # This function solves the HTTP-01 challenge
@@ -154,33 +156,35 @@ resource "aws_s3_bucket" "challenge" {
 
   bucket = local.domains[count.index]
 
-  versioning {
-    enabled = true
-  }
-
-  # Support to replicate everything back to a master bucket, in case you are
-  # doing some multi-domain cloudfront magic.acceleration_status
-  dynamic "replication_configuration" {
-    # Don't try to replicate to yourself
-    for_each = var.replication_target_bucket_arn == "" ? [] : var.replication_target_bucket_arn == "arn:aws:s3:::${local.domains[count.index]}" ? [] : [1]
-
-    content {
-      role = var.replication_role_arn
-      rules {
-        id     = "acme"
-        prefix = ".well-known"
-        status = "Enabled"
-
-        destination {
-          bucket        = var.replication_target_bucket_arn
-          storage_class = "STANDARD"
-        }
-      }
-    }
-  }
-
   # In case any challenges failed to clean up properly, this allows us to nuke the bucket
   force_destroy = true
 
   tags = local.tags
+}
+
+resource "aws_s3_bucket_versioning" "challenge" {
+  count = length(local.domains) * (var.create_buckets ? 1 : 0)
+
+  bucket = local.domains[count.index]
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_replication_configuration" "challenge" {
+  count = length(local.bucket_replications)
+
+  bucket = local.bucket_replications[count.index]
+
+  role = var.replication_role_arn
+  rule {
+    id     = "acme"
+    prefix = ".well-known"
+    status = "Enabled"
+
+    destination {
+      bucket        = var.replication_target_bucket_arn
+      storage_class = "STANDARD"
+    }
+  }
 }
