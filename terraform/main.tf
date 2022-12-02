@@ -40,7 +40,7 @@ resource "aws_lambda_function" "challenge" {
 
   # The certificate negotiation process could take a while, so give the lambda
   # time to run
-  timeout     = var.s3_delay_seconds * length(var.certificates) + 60
+  timeout     = var.timeout
   memory_size = 128
 
   tags = local.tags
@@ -179,8 +179,11 @@ resource "aws_s3_bucket_replication_configuration" "challenge" {
   role = var.replication_role_arn
   rule {
     id     = "acme"
-    prefix = ".well-known"
     status = "Enabled"
+
+    filter {
+      prefix = ".well-known"
+    }
 
     destination {
       bucket        = var.replication_target_bucket_arn

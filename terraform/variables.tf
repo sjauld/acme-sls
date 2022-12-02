@@ -67,6 +67,12 @@ variable "s3_delay_seconds" {
   type        = number
 }
 
+variable "timeout" {
+  description = "The lambda timeout"
+  default     = 300
+  type        = number
+}
+
 variable "user_email" {
   description = "An email address to use for registering certificates with Let's Encrypt - provide this if you want to get reminder emails when everything breaks"
   default     = "dev@null.com"
