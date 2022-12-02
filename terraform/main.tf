@@ -181,6 +181,10 @@ resource "aws_s3_bucket_replication_configuration" "challenge" {
     id     = "acme"
     status = "Enabled"
 
+    delete_marker_replication {
+      status = "Enabled"
+    }
+
     filter {
       prefix = ".well-known"
     }
