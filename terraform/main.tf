@@ -39,8 +39,8 @@ resource "aws_lambda_function" "challenge" {
   }
 
   # The certificate negotiation process could take a while, so give the lambda
-  # 5 minutes to run.
-  timeout     = 300
+  # time to run
+  timeout     = var.s3_delay_seconds * length(var.certificates) + 60
   memory_size = 128
 
   tags = local.tags
