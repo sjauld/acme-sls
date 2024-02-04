@@ -10,7 +10,7 @@ require (
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-acme/lego/v4 v4.5.3
 	github.com/gusaul/go-dynamock v0.0.0-20210107061312-3e989056e1e6
-	golang.org/x/crypto v0.1.0 // indirect
+	golang.org/x/crypto v0.17.0 // indirect
 )
 
 replace github.com/go-acme/lego/v4 => github.com/sjauld/lego/v4 v4.5.4
