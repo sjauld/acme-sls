@@ -162,6 +162,17 @@ resource "aws_s3_bucket" "challenge" {
   tags = local.tags
 }
 
+resource "aws_s3_bucket_public_access_block" "challenge" {
+  count = length(local.domains) * (var.create_buckets ? 1 : 0)
+
+  bucket = local.domains[count.index]
+
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}
+
 resource "aws_s3_bucket_versioning" "challenge" {
   count = length(local.domains) * (var.create_buckets ? 1 : 0)
 
