@@ -173,6 +173,16 @@ resource "aws_s3_bucket_public_access_block" "challenge" {
   restrict_public_buckets = false
 }
 
+resource "aws_s3_bucket_ownership_controls" "challenge" {
+  count = length(local.domains) * (var.create_buckets ? 1 : 0)
+
+  bucket = local.domains[count.index]
+
+  rule {
+    object_ownership = "BucketOwnerPreferred"
+  }
+}
+
 resource "aws_s3_bucket_versioning" "challenge" {
   count = length(local.domains) * (var.create_buckets ? 1 : 0)
 
