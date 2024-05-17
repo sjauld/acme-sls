@@ -13,13 +13,13 @@ AWS serverless (or similar) environments.
 
 Two working implementations are available in this repo:
 
-* [HTTP-01 (AWS Lambda / S3)](#http-01-aws-lambda--s3)
-* [HTTP-01 (Local demonstration)](#http-01-local-demonstration)
+- [HTTP-01 (AWS Lambda / S3)](#http-01-aws-lambda--s3)
+- [HTTP-01 (Local demonstration)](#http-01-local-demonstration)
 
 Two incomplete/doomed implmentations are also provided:
 
-* [HTTP-01 (AWS Lambda / API Gateway)](#http-01-aws-lambda--api-gateway)
-* [TLS-ALPN-01 (AWS Lambda / ACM)](#tls-alpn-01-aws-lambda--acm)
+- [HTTP-01 (AWS Lambda / API Gateway)](#http-01-aws-lambda--api-gateway)
+- [TLS-ALPN-01 (AWS Lambda / ACM)](#tls-alpn-01-aws-lambda--acm)
 
 ### HTTP-01 (AWS Lambda / S3)
 
@@ -33,13 +33,14 @@ functionality.
 
 Prerequisites:
 
-* [Terraform](https://www.terraform.io/)
-* [AWS Account](https://aws.amazon.com/)
-* [AWS credentials](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#authentication)
+- [Terraform](https://www.terraform.io/)
+- [AWS Account](https://aws.amazon.com/)
+- [AWS credentials](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#authentication)
   (hint: [aws-vault](https://github.com/99designs/aws-vault) rules)
-* A domain name and access to create DNS records
+- A domain name and access to create DNS records
 
 Create a `main.tf` file containing the following:
+
 ```
 provider "aws" {
   region = "us-east-1"
@@ -61,6 +62,7 @@ output "cname_records" {
   value = module.acme_sls.cname_records
 }
 ```
+
 Build the resources with `terraform apply`. You will then need to create CNAME
 records that point your domain name(s) to the associated S3 buckets. If you
 are using Route53 as a DNS provider, see
@@ -79,10 +81,10 @@ certificate(s) created in ACM in us-east-1.
 If you're not the sort of person who trusts random binaries distributed via
 public zip files, you can build the lambda function yourself. Prerequisites:
 
-* [Go](https://go.dev/)
+- [Go](https://go.dev/)
 
 Simply check out this repo and run
-`GOOS=linux GOARCH=amd64 go build -o lambda-http-s3 ./client/lambda-http-s3`.
+`GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o bootstrap ./client/lambda-http-s3`.
 You can then zip that binary and use the `lambda_zipfile` argument to feed it
 in to the terraform module.
 
@@ -101,8 +103,8 @@ see how the certificate creation flow works.
 
 Prerequisites:
 
-* [Docker](https://www.docker.com/)
-* [Go](https://go.dev/)
+- [Docker](https://www.docker.com/)
+- [Go](https://go.dev/)
 
 You can spin up everything you need docker; simply run
 `docker-compose up` and you'll be up and running with a test CA, local
