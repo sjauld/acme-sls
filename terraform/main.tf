@@ -27,7 +27,7 @@ resource "aws_lambda_function" "challenge" {
   role = aws_iam_role.lambda.arn
 
   runtime = "provided.al2023"
-  handler = var.lambda_handler
+  handler = "bootstrap"
 
   environment {
     variables = {
