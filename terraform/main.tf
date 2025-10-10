@@ -33,7 +33,7 @@ resource "aws_lambda_function" "challenge" {
     variables = {
       "RENEWAL_WINDOW" = "${var.renewal_window_hours}h"
       "S3_DELAY"       = "${var.s3_delay_seconds}s"
-      "S3_REGION"      = coalesce(var.aws_s3_region, data.aws_region.current.name)
+      "S3_REGION"      = coalesce(var.aws_s3_region, data.aws_region.current.region)
       "USER_EMAIL"     = var.user_email
     }
   }
